@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class PlayerScript : MonoBehaviour
 {
     [Header("Properties")]
@@ -40,6 +40,7 @@ public class PlayerScript : MonoBehaviour
     private bool isInvi;
     private float inviTimer;
     private bool coroutineStart;
+    
   
     // Start is called before the first frame update
     void Start()
@@ -53,112 +54,131 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (health.isDead())
         {
-            Destroy(gameObject);
+            if (!coroutineStart)
+            {
+                StartCoroutine(GameOver());
+            }
         }
-        if(Time.timeScale > 0 && !isAttack)
+        else
         {
-            #region movement
-                if (Input.GetAxisRaw("Horizontal") != 0)
-                {
-                    isMoving = true;
-                    changeAnim(horizontalState.name);
-                    if (Input.GetAxisRaw("Horizontal") > 0)
+         
+            #region Active Timescale Logic
+            if (Time.timeScale > 0 && !isAttack)
+            {
+                #region movement
+                    if (Input.GetAxisRaw("Horizontal") != 0)
                     {
-                        direction = 2;
-                        transform.localScale = new Vector2(1, 1);
-                    }
-                    else
-                    {
-                        direction = 4;
-                        transform.localScale = new Vector2(-1, 1);
-                    }
+                        isMoving = true;
+                        changeAnim(horizontalState.name);
+                        if (Input.GetAxisRaw("Horizontal") > 0)
+                        {
+                            direction = 2;
+                            transform.localScale = new Vector2(1, 1);
+                        }
+                        else
+                        {
+                            direction = 4;
+                            transform.localScale = new Vector2(-1, 1);
+                        }
 
-                }else if(Input.GetAxisRaw("Vertical") != 0)
-                {
-                    isMoving = true;
-                    if (Input.GetAxisRaw("Vertical") > 0)
+                    }else if(Input.GetAxisRaw("Vertical") != 0)
                     {
-                        direction = 1;
-                        changeAnim(backState.name);
+                        isMoving = true;
+                        if (Input.GetAxisRaw("Vertical") > 0)
+                        {
+                            direction = 1;
+                            changeAnim(backState.name);
+                        }
+                        else
+                        {
+                            direction = 3;
+                            changeAnim(frontState.name);
+                        }
                     }
                     else
                     {
-                        direction = 3;
-                        changeAnim(frontState.name);
+                        isMoving = false;
                     }
+                if (!isHit)
+                {
+                    rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
+                }
+            
+                #endregion
+
+                #region interaction
+                if (Input.GetKeyDown(KeyCode.X) && !isAttack)
+                {
+                    Vector2 targetPos = Vector2.zero;
+                    switch (direction)
+                    {
+                        case 1: 
+                            targetPos = Vector2.up; 
+                            break;
+                        case 2:
+                            targetPos = Vector2.right;
+                            break;
+                        case 3:
+                            targetPos = Vector2.down;
+                            break;
+                        case 4:
+                            targetPos = Vector2.left;
+                            break;
+                        default:
+                            break;
+                    }
+                    RaycastHit2D rayCheck = Physics2D.Raycast(transform.position, targetPos, interactRaycastLength);
+                    if (rayCheck.collider != null)
+                    {
+                        if (rayCheck.collider.CompareTag("Door"))
+                        {
+                            Door doorComp = rayCheck.collider.gameObject.GetComponent<Door>();
+                            doorComp.Open();
+                        }
+                    }
+                }
+                #endregion
+
+                #region attack
+                    if (Input.GetKeyDown(KeyCode.Z)) {
+                        if (!isAttack) {
+                            rb.velocity = Vector2.zero;
+                            StartCoroutine(attack(direction));   
+                        }
+                    }
+                #endregion
+            }
+            #endregion 
+            
+            #region Invincibility Logic
+            if (isInvi)
+            {
+                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"));
+                if(inviTimer <= 0)
+                {
+                    isInvi = false;
                 }
                 else
                 {
-                    isMoving = false;
-                }
-            if (!isHit)
-            {
-                rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
-            }
-            
-            #endregion
-
-            #region interaction
-            if (Input.GetKeyDown(KeyCode.X) && !isAttack)
-            {
-                Vector2 targetPos = Vector2.zero;
-                switch (direction)
-                {
-                    case 1: 
-                        targetPos = Vector2.up; 
-                        break;
-                    case 2:
-                        targetPos = Vector2.right;
-                        break;
-                    case 3:
-                        targetPos = Vector2.down;
-                        break;
-                    case 4:
-                        targetPos = Vector2.left;
-                        break;
-                    default:
-                        break;
-                }
-                RaycastHit2D rayCheck = Physics2D.Raycast(transform.position, targetPos, interactRaycastLength);
-                if (rayCheck.collider != null)
-                {
-                    if (rayCheck.collider.CompareTag("Door"))
+                    if (!coroutineStart)
                     {
-                        Door doorComp = rayCheck.collider.gameObject.GetComponent<Door>();
-                        doorComp.Open();
+                        StartCoroutine(blink());
                     }
+                    inviTimer -= Time.deltaTime;
                 }
-            }
-            #endregion
-
-            #region attack
-                if (Input.GetKeyDown(KeyCode.Z)) {
-                    if (!isAttack) {
-                        rb.velocity = Vector2.zero;
-                        StartCoroutine(attack(direction));   
-                    }
-                }
-            #endregion
-        }
-
-        if (isInvi)
-        {
-            if(inviTimer <= 0)
-            {
-                isInvi = false;
             }
             else
             {
-                if (!coroutineStart)
-                {
-                    StartCoroutine(blink());
-                }
-                inviTimer -= Time.deltaTime;
+                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
             }
+            #endregion
         }
         
+
+
     }
 
     private void changeAnim(string state)
@@ -242,4 +262,13 @@ public class PlayerScript : MonoBehaviour
             }
         }
     }
+
+    private IEnumerator GameOver()
+    {
+        coroutineStart = true;
+        sr.enabled = false;
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene("GameOver");
+    }
+
 }

@@ -5,12 +5,13 @@ using UnityEngine;
 public class EnemyBehavior : MonoBehaviour
 {
     [Header("Behaviour Settings")]
-    [SerializeField] private Transform travelPoint;
+    public Transform travelPoint;
     [SerializeField] private float speed;
     [SerializeField] private float detectRad;
 
     private bool isAggro = false;
-    private bool isForwards = false;
+    private bool isForwards = true;
+    private bool isTDead = false;
     private Vector3 startPos;
     private short direction;
     private Vector3 playerPos;
@@ -26,8 +27,6 @@ public class EnemyBehavior : MonoBehaviour
         startPos = transform.position;
         rb = GetComponent<Rigidbody2D>();
         health = GetComponent<HealthManager>();
-        sr = GetComponent<SpriteRenderer>();
-        bc = GetComponent<BoxCollider2D>();
         damager = GetComponent<DamageManager>();
     }
 
@@ -36,11 +35,10 @@ public class EnemyBehavior : MonoBehaviour
     {
         if (health.isDead())
         {
-            isActive = false;
-            sr.enabled = false;
-            bc.enabled = false;
+            Destroy(gameObject);
         }
-        if (isActive && !damager.isHit)
+        
+        if (!damager.isHit)
         {
             if (isPlayerInRange())
             {          
@@ -50,24 +48,24 @@ public class EnemyBehavior : MonoBehaviour
             {
                 if (isForwards)
                 {
-                    if(transform.position != travelPoint.position)
-                    {
-                        transform.position = Vector2.MoveTowards(transform.position, travelPoint.position, speed * Time.deltaTime);
-                    }
-                    else
+                    if (Vector2.Distance(transform.position, travelPoint.position) < 0.01)
                     {
                         isForwards = !isForwards;
+                    }
+                    else if(transform.position != travelPoint.position)
+                    {
+                        transform.position = Vector2.MoveTowards(transform.position, travelPoint.position, speed * Time.deltaTime);
                     }
                 }
                 else
                 {
-                    if (transform.position != startPos)
-                    {
-                        transform.position = Vector2.MoveTowards(transform.position, startPos, speed * Time.deltaTime);
-                    }
-                    else
+                    if(Vector2.Distance(transform.position, startPos) < 0.01)
                     {
                         isForwards = !isForwards;
+                    }
+                    else if (transform.position != startPos)
+                    {
+                        transform.position = Vector2.MoveTowards(transform.position, startPos, speed * Time.deltaTime);
                     }
                 
                 }
@@ -88,28 +86,4 @@ public class EnemyBehavior : MonoBehaviour
         return false;
     }
 
-    private void OnBecameVisible()
-    {
-        isActive = true;
-        sr.enabled = true;
-        bc.enabled = true;
-    }
-
-    private void OnBecameInvisible()
-    {
-        isActive = false;
-        transform.position = startPos;
-        health.Reset();
-        bc.enabled = false;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision != null) {
-            if (collision.gameObject.CompareTag("Player"))
-            {
-               
-            }
-        }
-    }
 }

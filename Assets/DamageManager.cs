@@ -12,16 +12,24 @@ public class DamageManager : MonoBehaviour
     private Rigidbody2D rb;
 
     public bool isHit = false;
-
+    private Vector3 knockBackDir;
     private void Start()
     {
         health = GetComponent<HealthManager>();
         rb = GetComponent<Rigidbody2D>();
     }
+
+    private void Update()
+    {
+        if (isHit)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, transform.position + knockBackDir, knockBack);
+        }
+    }
     public void Hit(Vector2 direction, int damage)
     {
         health.Damage(damage);
-        Vector2 knockBackDir = direction.normalized * knockBack;
+        knockBackDir = direction.normalized * knockBack;
         if (!isHit)
         {
             StartCoroutine(getKnockedback(knockBackDir));
@@ -31,7 +39,6 @@ public class DamageManager : MonoBehaviour
     private IEnumerator getKnockedback(Vector2 direction)
     {
         isHit = true;
-        rb.AddForce(direction, ForceMode2D.Impulse);
         yield return new WaitForSeconds(knockBackDuration);
         isHit = false;
     }

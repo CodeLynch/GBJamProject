@@ -25,15 +25,20 @@ public class areaTrigger : MonoBehaviour
         {
             if (cam.transform.position != newPos3)
             {
-                StartCoroutine(camTransition());
+                if (!isPanning)
+                {
+                    StartCoroutine(camTransition());
+                }
             }
         }
     }
 
     private IEnumerator camTransition()
     {
+        isPanning = true;
         float t = 0f;
         Time.timeScale = 0f;
+        yield return new WaitForSecondsRealtime(.2f);
         Vector3 oldPos = cam.transform.position;
         while(t < 1.0f)
         {
@@ -41,6 +46,7 @@ public class areaTrigger : MonoBehaviour
             cam.transform.position = Vector3.Lerp(oldPos, newPos3, t);
             yield return 0;
         }
-        Time.timeScale = 1f; 
+        Time.timeScale = 1f;
+        isPanning = false;
     }
 }

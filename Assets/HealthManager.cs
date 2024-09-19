@@ -16,6 +16,10 @@ public class HealthManager : MonoBehaviour
         health -= val;
     }
 
+    public int getHealth()
+    {
+        return health; 
+    }
     public void Reset()
     {
         health = orig;
@@ -24,6 +28,7 @@ public class HealthManager : MonoBehaviour
     {
         return health <= 0;
     }
+
 
     
 }
