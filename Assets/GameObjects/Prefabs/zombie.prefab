@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 3309802484286614757}
   - component: {fileID: 3490041898916530596}
   - component: {fileID: 8047326316527549809}
+  - component: {fileID: 5159334258985411711}
+  - component: {fileID: 248057690933701435}
   m_Layer: 6
   m_Name: zombie
   m_TagString: Untagged
@@ -129,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e9e07b9f018f144b4e787d98a5fed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knockBack: 0.02
+  knockBack: 0.09
   knockBackDuration: 0.07
   isHit: 0
 --- !u!61 &3490041898916530596
@@ -204,3 +206,33 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &5159334258985411711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4685319715123956523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1e43c11eed587c4ab13d7c680bbd206, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foods:
+  - food: {fileID: 4867734186205007842, guid: 1109c19d9e7490f43979904766584cbf, type: 3}
+  - food: {fileID: 4054263714828010607, guid: c60efe556d931014c85c1bfefcdbc9e3, type: 3}
+  - food: {fileID: 3967384498801334914, guid: 1500ad10352930648941233a2766d2da, type: 3}
+  - food: {fileID: 5989116776721550682, guid: 3c491041a160ea345a164fc0f4715ee2, type: 3}
+--- !u!114 &248057690933701435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4685319715123956523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf5f9f0a722b3464ea34e8cfd599a810, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosion: {fileID: 2118467147242854483, guid: b1d7a9b7749840c4eb07a55e56237b37, type: 3}

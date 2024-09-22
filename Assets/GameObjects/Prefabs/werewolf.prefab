@@ -10,11 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 7242552026760380316}
   - component: {fileID: 3013747889011299172}
-  - component: {fileID: 4493496297085680091}
   - component: {fileID: 2693766200134768877}
   - component: {fileID: 7216622728566663324}
   - component: {fileID: -9134756215189693733}
   - component: {fileID: 425610158226541953}
+  - component: {fileID: 450003874142312792}
+  - component: {fileID: -2311455434498749902}
+  - component: {fileID: 8351092612224603836}
   m_Layer: 6
   m_Name: werewolf
   m_TagString: Untagged
@@ -89,21 +91,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4493496297085680091
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3967958622078753713}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 375da741f2d8f4e4cbc229ffc2855df6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  travelPoint: {fileID: 0}
-  speed: 3.5
-  detectRad: 5
 --- !u!114 &2693766200134768877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,8 +116,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e9e07b9f018f144b4e787d98a5fed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knockBack: 0.03
-  knockBackDuration: 0.07
+  knockBack: 0.09
+  knockBackDuration: 0.1
   isHit: 0
 --- !u!61 &-9134756215189693733
 BoxCollider2D:
@@ -204,3 +191,48 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &450003874142312792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3967958622078753713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57b0d5f6c797722419a1579a186784b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 12
+  chargeCoolDown: 0.8
+  offset: 0.2
+--- !u!114 &-2311455434498749902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3967958622078753713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1e43c11eed587c4ab13d7c680bbd206, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foods:
+  - food: {fileID: 4867734186205007842, guid: 1109c19d9e7490f43979904766584cbf, type: 3}
+  - food: {fileID: 4054263714828010607, guid: c60efe556d931014c85c1bfefcdbc9e3, type: 3}
+  - food: {fileID: 3967384498801334914, guid: 1500ad10352930648941233a2766d2da, type: 3}
+  - food: {fileID: 5989116776721550682, guid: 3c491041a160ea345a164fc0f4715ee2, type: 3}
+--- !u!114 &8351092612224603836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3967958622078753713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf5f9f0a722b3464ea34e8cfd599a810, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosion: {fileID: 2118467147242854483, guid: b1d7a9b7749840c4eb07a55e56237b37, type: 3}
